@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 3: Pure Mathematics 3 — Edexcel IAL</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{--bg:#faf9f7;--bg-card:#fff;--bg-sidebar:#1a1a1a;--bg-sidebar-hover:#2a2a2a;--text:#1a1a1a;--text-muted:#6b6b6b;--text-sidebar:#ccc;--text-sidebar-active:#fff;--accent:#2563eb;--accent-light:#eff3ff;--border:#e5e5e5;--border-light:#f0f0f0;--tip-bg:#f0f7ff;--tip-border:#2563eb;--warn-bg:#fff8f0;--warn-border:#f59e0b;--star-bg:#f5f0ff;--star-border:#7c3aed;--quiz-bg:#f8fafc;--correct:#16a34a;--incorrect:#dc2626;--font-serif:'EB Garamond',Georgia,serif;--font-sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;--font-mono:'JetBrains Mono',monospace}
+  html{font-size:16px;scroll-behavior:smooth}
+  body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.6;font-size:1rem}
+
+  /* ---- Sidebar ---- */
+  .sidebar-toggle{display:none;position:fixed;top:14px;left:14px;z-index:50;width:40px;height:40px;border-radius:8px;background:var(--bg-sidebar);color:#fff;border:none;font-size:1.1rem;cursor:pointer}
+  .sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;background:var(--bg-sidebar);overflow-y:auto;padding:1.8rem 0 3rem;z-index:40;transition:transform .25s ease}
+  .sidebar-header{padding:0 1.6rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:1rem}
+  .sidebar-header .unit-code{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;color:#7fa8ff;text-transform:uppercase;margin-bottom:.5rem}
+  .sidebar-header h2{font-family:var(--font-serif);font-size:1.45rem;color:#fff;line-height:1.25;font-weight:600}
+  .sidebar-section-title{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:#777;padding:0 1.6rem;margin:1.4rem 0 .5rem}
+  .sidebar a{display:block;padding:.55rem 1.6rem;color:var(--text-sidebar);text-decoration:none;font-size:.88rem;border-left:3px solid transparent;transition:all .15s}
+  .sidebar a:hover{background:var(--bg-sidebar-hover);color:var(--text-sidebar-active)}
+  .sidebar a.active{color:var(--text-sidebar-active);border-left-color:var(--accent);background:var(--bg-sidebar-hover)}
+
+  /* ---- Main ---- */
+  .main{margin-left:260px;width:calc(100% - 260px)}
+  .hero{padding:5rem 3rem 3.5rem;border-bottom:1px solid var(--border)}
+  .hero .unit-code{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;margin-bottom:.9rem}
+  .hero h1{font-family:var(--font-serif);font-size:2.6rem;font-weight:600;margin-bottom:1rem;letter-spacing:-.01em}
+  .hero p{color:var(--text-muted);font-size:1.05rem;max-width:640px;margin-bottom:1.6rem}
+  .hero-meta{display:flex;gap:1rem;flex-wrap:wrap}
+  .hero-meta span{font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);background:var(--bg-card);border:1px solid var(--border);padding:.35rem .8rem;border-radius:999px}
+
+  .content{padding:3.5rem 3rem 6rem;max-width:880px}
+
+  .section{margin-bottom:4.5rem}
+  .section-number{font-family:var(--font-mono);font-size:.78rem;color:var(--accent);letter-spacing:.1em;margin-bottom:.4rem}
+  .section h2{font-family:var(--font-serif);font-size:1.9rem;font-weight:600;margin-bottom:1.4rem;padding-bottom:.9rem;border-bottom:2px solid var(--text)}
+  .section h3{font-family:var(--font-serif);font-size:1.3rem;font-weight:600;margin:2rem 0 .9rem}
+  .section p{margin-bottom:1rem;color:#333}
+  .section ul,.section ol{margin:0 0 1rem 1.3rem}
+  .section li{margin-bottom:.4rem;color:#333}
+
+  .def-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin:1.2rem 0 1.6rem}
+  .def-box{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem}
+  .def-box dt{font-weight:600;font-size:.92rem;margin-bottom:.3rem;color:var(--text)}
+  .def-box dd{font-size:.88rem;color:var(--text-muted);line-height:1.55}
+
+  .eq-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.2rem 0 1.6rem}
+  .eq-box{background:var(--accent-light);border:1px solid #dbe6ff;border-radius:8px;padding:.7rem 1rem;font-family:var(--font-mono);font-size:.86rem;text-align:center}
+
+  .formula-block{background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:6px;padding:1rem 1.3rem;margin:1.1rem 0;font-family:var(--font-mono);font-size:.92rem;overflow-x:auto}
+
+  .worked{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.4rem 1.5rem;margin:1.3rem 0}
+  .worked .label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem;font-weight:600}
+  .worked .label.solution{color:#16a34a}
+  .worked p{margin-bottom:.6rem}
+  .worked p:last-child{margin-bottom:0}
+
+  .tip{background:var(--tip-bg);border-left:4px solid var(--tip-border);border-radius:6px;padding:.9rem 1.2rem;margin:1.2rem 0;font-size:.92rem}
+  .tip strong{color:var(--tip-border)}
+  .warn{background:var(--warn-bg);border-left:4px solid var(--warn-border);border-radius:6px;padding:.9rem 1.2rem;margin:1.2rem 0;font-size:.92rem}
+  .warn strong{color:var(--warn-border)}
+  .star{background:var(--star-bg);border-left:4px solid var(--star-border);border-radius:6px;padding:.9rem 1.2rem;margin:1.2rem 0;font-size:.92rem}
+  .star strong{color:var(--star-border)}
+
+  table.identity-table{width:100%;border-collapse:collapse;margin:1.2rem 0 1.6rem;font-size:.9rem}
+  table.identity-table th,table.identity-table td{border:1px solid var(--border);padding:.55rem .8rem;text-align:left}
+  table.identity-table th{background:var(--bg-card);font-weight:600;font-family:var(--font-mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+  table.identity-table td{font-family:var(--font-mono);font-size:.88rem}
+
+  /* ---- Quiz ---- */
+  .quiz-section{background:var(--quiz-bg);border:1px solid var(--border);border-radius:14px;padding:2.2rem 2.2rem 2.6rem;margin-bottom:3.5rem}
+  .quiz-section .quiz-title{font-family:var(--font-serif);font-size:1.5rem;font-weight:600;margin-bottom:.3rem}
+  .quiz-section .quiz-sub{color:var(--text-muted);font-size:.88rem;margin-bottom:1.6rem}
+  .quiz-q{display:none}
+  .quiz-q.active{display:block}
+  .quiz-q p{font-size:1.02rem;font-weight:500;margin-bottom:1rem}
+  .quiz-option{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;margin-bottom:.6rem;cursor:pointer;font-family:var(--font-sans);font-size:.92rem;transition:all .15s}
+  .quiz-option:hover{border-color:var(--accent);background:var(--accent-light)}
+  .quiz-option.correct-answer{background:#f0fdf4;border-color:var(--correct);color:#15803d}
+  .quiz-option.incorrect-answer{background:#fef2f2;border-color:var(--incorrect);color:#b91c1c}
+  .quiz-option:disabled{cursor:default}
+  .quiz-feedback{font-size:.85rem;padding:.6rem .9rem;border-radius:6px;margin-top:.4rem;display:none}
+  .quiz-feedback.show{display:block}
+  .quiz-feedback.correct-fb{background:#f0fdf4;color:var(--correct)}
+  .quiz-feedback.incorrect-fb{background:#fef2f2;color:var(--incorrect)}
+  .quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1rem}
+  .quiz-nav button{padding:.5rem 1.2rem;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:.82rem;font-family:var(--font-sans);transition:all .2s}
+  .quiz-nav button:hover{border-color:var(--accent);color:var(--accent)}
+  .quiz-nav .quiz-progress{font-size:.8rem;color:var(--text-muted);font-family:var(--font-mono)}
+  .quiz-score{text-align:center;padding:1.5rem;display:none}
+  .quiz-score .score-number{font-family:var(--font-serif);font-size:2.5rem;font-weight:600;color:var(--accent)}
+  .quiz-score p{color:var(--text-muted);font-size:.9rem;margin-top:.3rem}
+  .quiz-retry{margin-top:1rem;padding:.6rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.85rem;font-family:var(--font-sans)}
+  .quiz-retry:hover{opacity:.9}
+
+  .section-divider{height:1px;background:var(--border);margin:4rem 0}
+
+  @media(max-width:900px){
+    .sidebar-toggle{display:flex;align-items:center;justify-content:center}
+    .sidebar{transform:translateX(-100%)}
+    .sidebar.open{transform:translateX(0)}
+    .main{margin-left:0;width:100%}
+    .hero{padding:4.5rem 1.5rem 3rem}
+    .hero h1{font-size:2rem}
+    .content{padding:2.2rem 1.2rem 4rem}
+    .def-grid,.eq-grid{grid-template-columns:1fr}
+  }
+
+  .math{font-family:var(--font-mono);font-size:.9em}
+  sup{font-size:.7em;vertical-align:super}
+  sub{font-size:.7em;vertical-align:sub}
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="unit-code">WMA13 · IAL</div>
+    <h2>Mathematics<br>Unit 3 Notes</h2>
+  </div>
+  <div class="sidebar-section-title">Topics</div>
+  <a href="#s1">1. Algebraic Fractions</a>
+  <a href="#s2">2. Functions</a>
+  <a href="#s3">3. Trigonometry</a>
+  <a href="#s4">4. Exponentials &amp; Logarithms</a>
+  <a href="#s5">5. Differentiation</a>
+  <a href="#s6">6. Numerical Methods</a>
+  <div class="sidebar-section-title">Quizzes</div>
+  <a href="#q1">Quiz 1 · Algebra &amp; Functions</a>
+  <a href="#q2">Quiz 2 · Trig &amp; Logs</a>
+  <a href="#q3">Quiz 3 · Calculus &amp; Numerical Methods</a>
+</nav>
+
+<main class="main">
+  <header class="hero">
+    <div class="unit-code">Pearson Edexcel International Advanced Level</div>
+    <h1>Unit 3: Pure Mathematics 3</h1>
+    <p>Complete revision notes for the WMA13 specification covering algebraic fractions, functions, advanced trigonometry, exponentials and logarithms, calculus techniques, and numerical methods, with embedded quizzes.</p>
+    <div class="hero-meta">
+      <span>WMA13/01</span>
+      <span>1h 30 min</span>
+      <span>75 marks</span>
+      <span>16⅔% of IAL</span>
+      <span>Jan · Jun · Oct</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- SECTION 1: ALGEBRAIC FRACTIONS -->
+    <section class="section" id="s1">
+      <div class="section-number">01</div>
+      <h2>Algebraic Fractions</h2>
+      <p>Algebraic fractions are manipulated using the same rules as numerical fractions: factorise first, then cancel, multiply, divide, add or subtract as required.</p>
+
+      <h3>Cancelling Common Factors</h3>
+      <p>Factorise the numerator and denominator fully, then cancel any common factors.</p>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Simplify <span class="math">(x³ − 2x² − 9x + 4) / (x² − 36)</span> when the numerator factorises to give a common factor with the denominator.</p>
+        <div class="label solution">Solution</div>
+        <p>Factorise top and bottom fully, identify the shared factor (here, <span class="math">(x − 3)</span> in the original worked example), and cancel it to leave the simplified fraction in fully factorised form.</p>
+      </div>
+
+      <h3>Multiplying &amp; Dividing Fractions</h3>
+      <p>To divide, turn the second fraction upside down and multiply. Factorise everything first, then cancel common factors across the whole product before multiplying out.</p>
+
+      <h3>Adding &amp; Subtracting Fractions</h3>
+      <p>Factorise each denominator first — finding the Lowest Common Denominator (LCD) before combining saves a lot of algebra later. Combine over the LCD, then expand and simplify the numerator only if it does not simplify further.</p>
+
+      <h3>Equations Involving Fractions</h3>
+      <p>Multiply both sides of the equation by the LCD to clear all denominators, then solve the resulting polynomial equation.</p>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Solve <span class="math">1/(x−1) − 1/x = 1/(2x)</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Multiplying through by <span class="math">2x(x − 1)</span> and simplifying leads to the quadratic <span class="math">x² + x − 2 = 0</span>, which factorises as <span class="math">(x + 2)(x − 1) = 0</span>, giving <span class="math">x = −2</span> or <span class="math">x = 1</span>.</p>
+      </div>
+
+      <div class="tip"><strong>Tip:</strong> Always factorise denominators before searching for an LCD — never multiply unfactorised expressions together, or the LCD will be far larger than necessary.</div>
+    </section>
+
+    <!-- SECTION 2: FUNCTIONS -->
+    <section class="section" id="s2">
+      <div class="section-number">02</div>
+      <h2>Functions</h2>
+      <p>A function is a mapping where every value of x in the domain gives exactly one value of y.</p>
+
+      <h3>Notation</h3>
+      <p>The following all describe the same function: <span class="math">y = x² − 3x + 7</span>, <span class="math">f(x) = x² − 3x + 7</span>, and <span class="math">f : x → x² − 3x + 7</span>.</p>
+
+      <h3>Domain, Range &amp; Graph</h3>
+      <div class="def-grid">
+        <div class="def-box"><dt>Domain</dt><dd>The set of values that x is allowed to take — sometimes given explicitly, sometimes restricted by the function itself (e.g. √x requires x ≥ 0).</dd></div>
+        <div class="def-box"><dt>Range</dt><dd>The set of y-values actually produced by the function over its domain.</dd></div>
+      </div>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Find the range of <span class="math">f : x → 2x − 3</span> with domain <span class="math">x ∈ ℝ: −2 &lt; x ≤ 4</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Sketching the line over the domain shows the y-values run from −7 (excluded, since x ≠ −2) up to 5 (included, since x can equal 4), so the range is <span class="math">y ∈ ℝ: −7 &lt; y ≤ 5</span>.</p>
+      </div>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Find the largest possible domain and range for <span class="math">f : x → √(x − 3) + 1</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>The expression under the root cannot be negative, so <span class="math">x − 3 ≥ 0 ⇒ x ≥ 3</span> is the largest domain. Sketching the graph shows it covers all y from 1 upward, so the range is <span class="math">y ∈ ℝ: y ≥ 1</span>.</p>
+      </div>
+      <div class="warn"><strong>Watch for asymptotes:</strong> for a rational function such as <span class="math">f : x → (2x)/(x+1)</span>, the domain excludes the value that makes the denominator zero, and the range excludes the horizontal asymptote value.</div>
+
+      <h3>Defining Functions by Restricting the Domain</h3>
+      <p>Some mappings are not functions over all real numbers but become functions once the domain is restricted — for instance, <span class="math">x → √x</span> is only a function once restricted to <span class="math">x ≥ 0</span>, since negative inputs have no real output.</p>
+
+      <h3>Composite Functions</h3>
+      <p>For the composite <span class="math">fg(x)</span>, apply g first, then f. The range of g must lie within the domain of f for the composite to be defined. Note that <span class="math">fg</span> and <span class="math">gf</span> are generally different functions.</p>
+
+      <h3>Inverse Functions &amp; Their Graphs</h3>
+      <p>The inverse of f, written <span class="math">f⁻¹</span>, reverses the effect of f (this is not the same as 1/f). The graph of <span class="math">y = f⁻¹(x)</span> is the reflection of <span class="math">y = f(x)</span> in the line <span class="math">y = x</span>.</p>
+      <div class="formula-block">To find the inverse of x → y:<br>(i) interchange x and y<br>(ii) rearrange to find y in terms of x</div>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Find the inverse of <span class="math">g : x → (2x − 5)/(x + 3)</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Swap x and y, then solve for y by collecting all the y terms on one side and factorising — this yields <span class="math">g⁻¹ : x → (5x + 3)/(2x − 1)</span>. Note that <span class="math">f f⁻¹(x) = f⁻¹f(x) = x</span> always.</p>
+      </div>
+
+      <h3>Domain &amp; Range of Inverse Functions</h3>
+      <p>The domain of <span class="math">f⁻¹</span> equals the range of f, and the range of <span class="math">f⁻¹</span> equals the domain of f, because the inverse's graph is a reflection in <span class="math">y = x</span>.</p>
+      <div class="tip"><strong>Tip:</strong> When a quadratic-type function has a restricted domain (e.g. <span class="math">x ≤ 3</span>), check the reflection in <span class="math">y = x</span> carefully to pick the correct sign (+ or −) when taking a square root while finding the inverse.</div>
+
+      <h3>Modulus Functions</h3>
+      <div class="def-grid">
+        <div class="def-box"><dt>y = |f(x)|</dt><dd>Sketch y = f(x) first, then reflect any part below the x-axis up above it.</dd></div>
+        <div class="def-box"><dt>y = f(|x|)</dt><dd>Sketch y = f(x) for x ≥ 0 only, then reflect that part in the y-axis to complete the graph (since f(−x) = f(x) for any x value here).</dd></div>
+      </div>
+
+      <h3>Standard Graphs &amp; Transformations</h3>
+      <p>Know the shapes of <span class="math">y = x³, x⁴, 1/x, √x</span> and the standard transformations:</p>
+      <table class="identity-table">
+        <tr><th>Transformation</th><th>Effect on y = f(x)</th></tr>
+        <tr><td>Translate by (a, b)</td><td>y = f(x − a) + b</td></tr>
+        <tr><td>Stretch ×a in y-direction</td><td>y = a·f(x)</td></tr>
+        <tr><td>Stretch ×a in x-direction</td><td>y = f(x/a)</td></tr>
+        <tr><td>Reflect in x-axis</td><td>y = −f(x)</td></tr>
+        <tr><td>Reflect in y-axis</td><td>y = f(−x)</td></tr>
+      </table>
+      <div class="warn"><strong>Order matters:</strong> e.g. <span class="math">y = 3x² + 6</span> is a stretch ×3 followed by a translation of (0, 6) — but to apply the translation first, you must rewrite as <span class="math">3(x² + 2)</span>, giving a translation of (0, 2) followed by the stretch. Combined transformations don't commute unless rewritten correctly.</div>
+
+      <h3>Sketching Curves</h3>
+      <p>Always show: coordinates of axis intercepts, and the equations of any asymptotes (drawn as dotted lines).</p>
+    </section>
+
+    <!-- QUIZ 1 -->
+    <div class="quiz-section" id="q1">
+      <div class="quiz-title">Quiz 1 · Algebra &amp; Functions</div>
+      <div class="quiz-sub">Test yourself on algebraic fractions, domain/range, composite and inverse functions.</div>
+      <div class="quiz-container" data-quiz-id="quiz1"></div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- SECTION 3: TRIGONOMETRY -->
+    <section class="section" id="s3">
+      <div class="section-number">03</div>
+      <h2>Trigonometry</h2>
+
+      <h3>Sec, Cosec &amp; Cot</h3>
+      <div class="eq-grid">
+        <div class="eq-box">sec x = 1/cos x</div>
+        <div class="eq-box">cosec x = 1/sin x</div>
+        <div class="eq-box">cot x = cos x/sin x = 1/tan x</div>
+      </div>
+      <div class="warn"><strong>No calculator buttons:</strong> convert sec/cosec/cot equations into sin, cos, tan form before using a calculator — there are no direct buttons for the reciprocal functions.</div>
+
+      <h3>Inverse Trigonometric Functions</h3>
+      <p>To make each inverse single-valued, the domain of the original function is restricted:</p>
+      <table class="identity-table">
+        <tr><th>Function</th><th>Restricted domain</th></tr>
+        <tr><td>arcsin x</td><td>−π/2 ≤ x ≤ π/2</td></tr>
+        <tr><td>arccos x</td><td>0 ≤ x ≤ π</td></tr>
+        <tr><td>arctan x</td><td>−π/2 &lt; x &lt; π/2</td></tr>
+      </table>
+      <p>Each graph is the reflection of the corresponding trig graph (over its restricted domain) in the line <span class="math">y = x</span>.</p>
+
+      <h3>Trigonometric Identities</h3>
+      <p>These should be learnt:</p>
+      <table class="identity-table">
+        <tr><th>Pythagorean</th><th>Identity</th></tr>
+        <tr><td></td><td>sin²θ + cos²θ = 1</td></tr>
+        <tr><td></td><td>tan²θ + 1 = sec²θ</td></tr>
+        <tr><td></td><td>1 + cot²θ = cosec²θ</td></tr>
+      </table>
+      <table class="identity-table">
+        <tr><th>Compound &amp; double angle</th><th>Identity</th></tr>
+        <tr><td>Sine</td><td>sin(A ± B) = sinA cosB ± cosA sinB</td></tr>
+        <tr><td>Cosine</td><td>cos(A ± B) = cosA cosB ∓ sinA sinB</td></tr>
+        <tr><td>Double angle</td><td>sin2A = 2sinA cosA;  cos2A = cos²A − sin²A = 2cos²A − 1 = 1 − 2sin²A</td></tr>
+        <tr><td>Triple angle</td><td>sin3A = 3sinA − 4sin³A;  cos3A = 4cos³A − 3cosA</td></tr>
+      </table>
+      <table class="identity-table">
+        <tr><th>Sum-to-product</th><th>Identity</th></tr>
+        <tr><td>sinP + sinQ</td><td>2 sin[(P+Q)/2] cos[(P−Q)/2]</td></tr>
+        <tr><td>sinP − sinQ</td><td>2 cos[(P+Q)/2] sin[(P−Q)/2]</td></tr>
+        <tr><td>cosP + cosQ</td><td>2 cos[(P+Q)/2] cos[(P−Q)/2]</td></tr>
+        <tr><td>cosP − cosQ</td><td>−2 sin[(P+Q)/2] sin[(P−Q)/2]</td></tr>
+      </table>
+      <div class="star"><strong>Know this proof:</strong> sinP + sinQ = 2 sin[(P+Q)/2] cos[(P−Q)/2] follows from subtracting sin(A−B) from sin(A+B), then substituting P = A+B and Q = A−B. The other three sum-to-product identities are proved the same way.</div>
+      <div class="warn"><strong>Not in the formula booklet:</strong> the product-to-sum forms (2sinAcosB = sin(A+B) + sin(A−B), etc.) must be learnt — they are not provided in the exam.</div>
+
+      <h3>Finding Exact Values</h3>
+      <p>Build unknown angles from known exact values (30°, 45°, 60°) using the compound angle formulae — e.g. <span class="math">cos15° = cos(45° − 30°)</span> expands to give an exact surd answer.</p>
+
+      <h3>Proving Identities</h3>
+      <p>Work on one side only (usually the LHS) and manipulate it algebraically until it matches the other side. Never alter both sides simultaneously.</p>
+
+      <h3>Eliminating a Variable from Parametric Equations</h3>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Eliminate θ from <span class="math">x = secθ − 1, y = tanθ</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Using <span class="math">sec²θ − tan²θ = 1</span> and substituting <span class="math">secθ = x+1, tanθ = y</span> gives <span class="math">(x+1)² − y² = 1</span>, which rearranges to <span class="math">y² = x² + 2x</span>.</p>
+      </div>
+
+      <h3>Solving Trig Equations</h3>
+      <p>Choose whichever identity simplifies the equation to a single trig function. Equations involving sums/differences of sines or cosines (like <span class="math">sin3x − sin5x = 0</span>) are solved by converting to the product form first, then setting each factor to zero in turn.</p>
+
+      <h3>R cos(x ± α) and R sin(x ± α)</h3>
+      <p>Used to rewrite expressions like <span class="math">a cos x ± b sin x</span> as a single trig term. There are four standard forms — choose the one whose sign pattern matches the expression, so that R stays positive and α stays acute.</p>
+      <div class="formula-block">
+        R cos(x + α) = R cosx cosα − R sinx sinα<br>
+        R cos(x − α) = R cosx cosα + R sinx sinα<br>
+        R sin(x + α) = R sinx cosα + R cosx sinα<br>
+        R sin(x − α) = R sinx cosα − R cosx sinα
+      </div>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Solve <span class="math">12 sinx − 5 cosx = 6</span> for <span class="math">0° ≤ x ≤ 360°</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Since the sinx term is positive and the cosx term is negative, use <span class="math">R sin(x − α)</span>. Equating coefficients gives <span class="math">R = 13, α ≈ 22.62°</span>, so <span class="math">12sinx − 5cosx = 13 sin(x − 22.62°)</span>. Solving <span class="math">13 sin(x − 22.62°) = 6</span> gives <span class="math">x ≈ 50.1°</span> or <span class="math">175.1°</span>.</p>
+      </div>
+      <div class="tip"><strong>Tip:</strong> Once in the R sin/cos(x ± α) form, the maximum/minimum value of the whole expression is simply ±R, occurring when the trig term equals ±1 — useful for max/min value questions without further differentiation.</div>
+    </section>
+
+    <!-- SECTION 4: EXPONENTIALS & LOGARITHMS -->
+    <section class="section" id="s4">
+      <div class="section-number">04</div>
+      <h2>Exponentials &amp; Logarithms</h2>
+
+      <h3>Natural Logarithms</h3>
+      <p><span class="math">e ≈ 2.7183</span>. Logs to base e are natural logarithms, written <span class="math">ln x</span> (i.e. <span class="math">log_e x</span>). The graphs of <span class="math">y = eˣ</span> and <span class="math">y = ln x</span> are reflections of each other in <span class="math">y = x</span>, since they are inverse functions.</p>
+      <div class="tip"><strong>Transforming exponential graphs:</strong> for <span class="math">y = e^(ax+b) + c</span>, rewrite the exponent to isolate the stretch and translation — e.g. <span class="math">e^(2x+3) = e^(2(x + 3/2))</span> shows a stretch ×½ in x, then a translation, then the +c shifts vertically.</div>
+
+      <h3>Solving Equations of the Form e^(ax+b) = p</h3>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Solve <span class="math">e^(2x+3) = 5</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Take ln of both sides: <span class="math">2x + 3 = ln5 ⇒ x = (ln5 − 3)/2 ≈ −0.695</span>.</p>
+      </div>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Solve <span class="math">ln(3x − 5) = 4</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Raise both sides as a power of e: <span class="math">3x − 5 = e⁴ ⇒ x = (5 + e⁴)/3 ≈ 19.9</span>.</p>
+      </div>
+    </section>
+
+    <!-- QUIZ 2 -->
+    <div class="quiz-section" id="q2">
+      <div class="quiz-title">Quiz 2 · Trig &amp; Logs</div>
+      <div class="quiz-sub">Reciprocal &amp; inverse trig, identities, R cos(x+α), and natural log equations.</div>
+      <div class="quiz-container" data-quiz-id="quiz2"></div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- SECTION 5: DIFFERENTIATION -->
+    <section class="section" id="s5">
+      <div class="section-number">05</div>
+      <h2>Differentiation</h2>
+      <p>P3 builds on the chain, product and quotient rules from P2 by applying them to <span class="math">eˣ</span>, <span class="math">ln x</span>, and the trig functions, and introduces differentiation with respect to a different variable.</p>
+
+      <h3>Chain Rule — Reminder</h3>
+      <div class="formula-block">dy/dx = dy/du × du/dx</div>
+      <p>Differentiate the outer function with respect to u, then multiply by du/dx.</p>
+
+      <h3>Derivatives of eˣ and ln x</h3>
+      <table class="identity-table">
+        <tr><th>y</th><th>dy/dx</th></tr>
+        <tr><td>eˣ</td><td>eˣ</td></tr>
+        <tr><td>ln x</td><td>1/x</td></tr>
+        <tr><td>ln(kx)</td><td>1/x &nbsp;(the constant k disappears, since ln(kx) = ln k + ln x)</td></tr>
+        <tr><td>e^u (chain rule)</td><td>e^u × du/dx</td></tr>
+        <tr><td>ln u (chain rule)</td><td>(1/u) × du/dx</td></tr>
+      </table>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Differentiate <span class="math">f(x) = ln3x − ln x⁵</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Simplify first using log laws: <span class="math">f(x) = ln3 + lnx − 5lnx = ln3 − 4lnx</span>, so <span class="math">f′(x) = −4/x</span>.</p>
+      </div>
+
+      <h3>Derivative of aˣ</h3>
+      <div class="formula-block">y = aˣ  ⇒  dy/dx = aˣ ln a</div>
+      <div class="star"><strong>Know this proof:</strong> take ln of both sides of <span class="math">y = aˣ</span> to get <span class="math">ln y = x ln a</span>; differentiating implicitly gives <span class="math">(1/y)(dy/dx) = ln a</span>, so <span class="math">dy/dx = y ln a = aˣ ln a</span>.</div>
+
+      <h3>dy/dx = 1 ÷ (dx/dy)</h3>
+      <p>Useful when x is given as a function of y and is easier to differentiate that way round.</p>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>If <span class="math">x = sin²3y</span>, find dy/dx.</p>
+        <div class="label solution">Solution</div>
+        <p>Find dx/dy first: <span class="math">dx/dy = 6 sin3y cos3y</span>. Then <span class="math">dy/dx = 1/(6 sin3y cos3y)</span>, which simplifies to <span class="math">⅓ cosec6y</span>.</p>
+      </div>
+
+      <h3>Trigonometric Differentiation</h3>
+      <table class="identity-table">
+        <tr><th>f(x)</th><th>f′(x)</th></tr>
+        <tr><td>sin x</td><td>cos x</td></tr>
+        <tr><td>cos x</td><td>−sin x</td></tr>
+        <tr><td>tan x</td><td>sec²x</td></tr>
+        <tr><td>sec x</td><td>sec x tan x</td></tr>
+        <tr><td>cot x</td><td>−cosec²x</td></tr>
+        <tr><td>cosec x</td><td>−cosec x cot x</td></tr>
+      </table>
+      <div class="warn"><strong>Radians only:</strong> x must always be measured in radians when differentiating trig functions, or these results do not hold.</div>
+
+      <h3>Combining the Chain, Product &amp; Quotient Rules with Trig/Exp/Log</h3>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Differentiate <span class="math">y = x² × cosec3x</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Using the product rule with <span class="math">u = x², v = cosec3x</span>: <span class="math">dy/dx = −3x²cosec3x·cot3x + 2x·cosec3x</span>.</p>
+      </div>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Differentiate <span class="math">y = tan2x / 7x³</span>.</p>
+        <div class="label solution">Solution</div>
+        <p>Using the quotient rule and simplifying the result over a common power of x gives <span class="math">dy/dx = (2sec²2x)/(7x³) − (3tan2x)/(7x⁴)</span>.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 6: NUMERICAL METHODS -->
+    <section class="section" id="s6">
+      <div class="section-number">06</div>
+      <h2>Numerical Methods</h2>
+
+      <h3>Locating the Roots of f(x) = 0</h3>
+      <p>A quick sketch of <span class="math">y = f(x)</span> gives a rough idea of where the roots lie. If f(x) is continuous on [a, b] and changes sign between x = a and x = b, then a root lies in that interval.</p>
+
+      <h3>The Iteration xₙ₊₁ = g(xₙ)</h3>
+      <div class="worked">
+        <div class="label">Example</div>
+        <p>Show a root of <span class="math">f(x) = x³ − 8x − 7 = 0</span> lies between 3 and 4, rearrange as <span class="math">x = ∛(8x+7)</span>, and iterate from <span class="math">x₁ = 3</span>.</p>
+        <div class="label solution">Solution</div>
+        <p><span class="math">f(3) = −4, f(4) = +25</span> — a sign change confirms a root in [3, 4]. Iterating <span class="math">xₙ₊₁ = ∛(8xₙ+7)</span> from <span class="math">x₁ = 3</span> gives <span class="math">x₂ ≈ 3.1414, x₃ ≈ 3.1791, x₄ ≈ 3.1891</span>, converging towards <span class="math">α ≈ 3.19</span> (3 s.f.).</p>
+      </div>
+      <div class="tip"><strong>Justifying accuracy:</strong> to confirm a root is correct to 3 s.f. (e.g. α = 3.19), evaluate f(x) at the interval boundaries either side of the rounding point (e.g. f(3.185) and f(3.195)) and show a sign change — this proves the root lies in that narrow interval.</div>
+
+      <h3>Conditions for Convergence</h3>
+      <p>For the iteration <span class="math">xₙ₊₁ = g(xₙ)</span> near a root <span class="math">x = α</span>:</p>
+      <table class="identity-table">
+        <tr><th>Condition on g′(α)</th><th>Behaviour</th></tr>
+        <tr><td>0 &lt; g′(α) &lt; 1</td><td>Converges, staircase pattern (no oscillation)</td></tr>
+        <tr><td>−1 &lt; g′(α) &lt; 0</td><td>Converges, oscillating/cobweb pattern</td></tr>
+        <tr><td>g′(α) &lt; −1 or g′(α) &gt; 1</td><td>Diverges</td></tr>
+      </table>
+    </section>
+
+    <!-- QUIZ 3 -->
+    <div class="quiz-section" id="q3">
+      <div class="quiz-title">Quiz 3 · Calculus &amp; Numerical Methods</div>
+      <div class="quiz-sub">Differentiating eˣ, ln x, aˣ, and trig functions; iteration and convergence.</div>
+      <div class="quiz-container" data-quiz-id="quiz3"></div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+const quizData = {
+  quiz1: [
+    {q:"Simplify (x²−9)/(x²+x−12).", options:["(x+3)/(x+4)","(x−3)/(x+4)","(x+3)/(x−4)","x−3"], answer:1},
+    {q:"What is the domain of f(x) = √(x−3) + 1?", options:["x ≥ 1","x ∈ ℝ","x ≥ 3","x > 3"], answer:2},
+    {q:"If f(x) = 3x − 2 and g(x) = x² + 1, what is fg(x)?", options:["3x² + 1","3x² − 1","9x² − 12x + 5","3x² + 3"], answer:0},
+    {q:"The domain of f⁻¹(x) is equal to:", options:["The domain of f(x)","The range of f(x)","Always all real numbers","The y-intercept of f(x)"], answer:1},
+    {q:"To sketch y = f(|x|), you should:", options:["Reflect the whole graph in the x-axis","Sketch for x ≥ 0 then reflect in the y-axis","Reflect any part below the x-axis upward","Sketch for x ≤ 0 then reflect in the x-axis"], answer:1},
+    {q:"A stretch ×3 in the y-direction followed by a translation of (0,6) on y = x² gives:", options:["y = 3(x+6)²","y = 3x² + 6","y = (3x)² + 6","y = 3x² + 18"], answer:1}
+  ],
+  quiz2: [
+    {q:"sec x is defined as:", options:["1/sin x","1/cos x","sin x/cos x","cos x/sin x"], answer:1},
+    {q:"The restricted domain for arccos x is:", options:["−π/2 ≤ x ≤ π/2","0 ≤ x ≤ π","−π ≤ x ≤ π","0 ≤ x ≤ π/2"], answer:1},
+    {q:"Which identity is NOT in the formula booklet and must be learnt?", options:["sin²θ + cos²θ = 1","tan²θ + 1 = sec²θ","2 sinA cosB = sin(A+B) + sin(A−B)","cos(A+B) = cosAcosB − sinAsinB"], answer:2},
+    {q:"To solve 12sinx − 5cosx = 6, you should write it as:", options:["13 cos(x − α)","13 sin(x − α)","13 sin(x + α)","13 cos(x + α)"], answer:1},
+    {q:"The maximum value of 13 sin(x − 22.6°) is:", options:["6","12","13","22.6"], answer:2},
+    {q:"Solving e^(2x+3) = 5 gives x equal to:", options:["(ln5 − 3)/2","(ln5 + 3)/2","ln5/2 − 3","2ln5 − 3"], answer:0}
+  ],
+  quiz3: [
+    {q:"The derivative of ln(kx) with respect to x, for constant k, is:", options:["k/x","1/(kx)","1/x","k"], answer:2},
+    {q:"If y = aˣ, then dy/dx equals:", options:["aˣ","x·a^(x−1)","aˣ ln a","ln a"], answer:2},
+    {q:"The derivative of sec x is:", options:["sec x tan x","−cosec x cot x","tan²x","sec²x"], answer:0},
+    {q:"For x = sin²3y, the easiest first step to find dy/dx is to:", options:["Differentiate directly to get dy/dx","Find dx/dy first, then take the reciprocal","Take ln of both sides","Substitute u = 3y immediately"], answer:1},
+    {q:"For the iteration xₙ₊₁ = g(xₙ), if −1 < g′(α) < 0, the sequence:", options:["Diverges","Converges without oscillating","Converges while oscillating","Stays constant"], answer:2},
+    {q:"To prove a root is 3.19 to 3 s.f., you should:", options:["Iterate one more time","Show f(x) changes sign between 3.185 and 3.195","Check g′(α) < 1","Differentiate f(x) at x = 3.19"], answer:1}
+  ]
+};
+
+function initQuizzes(){
+  document.querySelectorAll('.quiz-container').forEach(container=>{
+    const quizId = container.dataset.quizId;
+    const questions = quizData[quizId];
+    container.dataset.score = 0;
+    questions.forEach((item,i)=>{
+      const div=document.createElement('div');
+      div.className='quiz-q'+(i===0?' active':'');
+      const indices=item.options.map((_,idx)=>idx);
+      for(let j=indices.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[indices[j],indices[k]]=[indices[k],indices[j]]}
+      const correctShuffled=indices.indexOf(item.answer);
+      let html=`<p>${i+1}. ${item.q}</p>`;
+      indices.forEach((origIdx,newIdx)=>{
+        html+=`<button class="quiz-option" data-correct="${newIdx===correctShuffled}" onclick="handleAnswer(this,'${quizId}',${i})">${item.options[origIdx]}</button>`;
+      });
+      html+=`<div class="quiz-feedback"></div><div class="quiz-nav"><span class="quiz-progress">${i+1} / ${questions.length}</span>`;
+      if(i<questions.length-1) html+=`<button onclick="nextQuestion('${quizId}',${i})">Next →</button>`;
+      else html+=`<button onclick="showScore('${quizId}')">See results</button>`;
+      html+=`</div>`;
+      div.innerHTML=html;
+      container.appendChild(div);
+    });
+    const scoreDiv=document.createElement('div');
+    scoreDiv.className='quiz-score';
+    scoreDiv.innerHTML=`<div class="score-number"></div><p></p><button class="quiz-retry" onclick="retryQuiz('${quizId}')">Try again</button>`;
+    container.appendChild(scoreDiv);
+  });
+}
+
+function handleAnswer(btn, quizId, qIndex){
+  const qDiv = btn.closest('.quiz-q');
+  const options = qDiv.querySelectorAll('.quiz-option');
+  const isCorrect = btn.dataset.correct === 'true';
+  options.forEach(o=>{
+    o.disabled = true;
+    if(o.dataset.correct === 'true') o.classList.add('correct-answer');
+  });
+  if(!isCorrect) btn.classList.add('incorrect-answer');
+  const container = qDiv.closest('.quiz-container');
+  if(isCorrect) container.dataset.score = parseInt(container.dataset.score) + 1;
+  const fb = qDiv.querySelector('.quiz-feedback');
+  fb.textContent = isCorrect ? 'Correct!' : 'Not quite — the correct answer is highlighted above.';
+  fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct-fb' : 'incorrect-fb');
+}
+
+function nextQuestion(quizId, currentIndex){
+  const container = document.querySelector(`[data-quiz-id="${quizId}"]`);
+  const qs = container.querySelectorAll('.quiz-q');
+  qs[currentIndex].classList.remove('active');
+  qs[currentIndex+1].classList.add('active');
+}
+
+function showScore(quizId){
+  const container = document.querySelector(`[data-quiz-id="${quizId}"]`);
+  const qs = container.querySelectorAll('.quiz-q');
+  qs[qs.length-1].classList.remove('active');
+  const score = parseInt(container.dataset.score);
+  const total = qs.length;
+  const scoreDiv = container.querySelector('.quiz-score');
+  scoreDiv.style.display = 'block';
+  scoreDiv.querySelector('.score-number').textContent = `${score} / ${total}`;
+  scoreDiv.querySelector('p').textContent = score === total ? 'Perfect score!' : 'Review the topics above and try again.';
+}
+
+function retryQuiz(quizId){
+  const container = document.querySelector(`[data-quiz-id="${quizId}"]`);
+  container.innerHTML = '';
+  container.dataset.score = 0;
+  const questions = quizData[quizId];
+  questions.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className='quiz-q'+(i===0?' active':'');
+    const indices=item.options.map((_,idx)=>idx);
+    for(let j=indices.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[indices[j],indices[k]]=[indices[k],indices[j]]}
+    const correctShuffled=indices.indexOf(item.answer);
+    let html=`<p>${i+1}. ${item.q}</p>`;
+    indices.forEach((origIdx,newIdx)=>{
+      html+=`<button class="quiz-option" data-correct="${newIdx===correctShuffled}" onclick="handleAnswer(this,'${quizId}',${i})">${item.options[origIdx]}</button>`;
+    });
+    html+=`<div class="quiz-feedback"></div><div class="quiz-nav"><span class="quiz-progress">${i+1} / ${questions.length}</span>`;
+    if(i<questions.length-1) html+=`<button onclick="nextQuestion('${quizId}',${i})">Next →</button>`;
+    else html+=`<button onclick="showScore('${quizId}')">See results</button>`;
+    html+=`</div>`;
+    div.innerHTML=html;
+    container.appendChild(div);
+  });
+  const scoreDiv=document.createElement('div');
+  scoreDiv.className='quiz-score';
+  scoreDiv.innerHTML=`<div class="score-number"></div><p></p><button class="quiz-retry" onclick="retryQuiz('${quizId}')">Try again</button>`;
+  container.appendChild(scoreDiv);
+}
+
+document.querySelectorAll('.sidebar a').forEach(a=>{
+  a.addEventListener('click',()=>{
+    if(window.innerWidth<=900) document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+initQuizzes();
+</script>
+</body>
+</html>
